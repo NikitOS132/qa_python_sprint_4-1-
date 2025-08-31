@@ -5,6 +5,17 @@ from main import BooksCollector
 def collector():
     return BooksCollector()
 
+class TestBooksCollector:
+    def test_add_new_book(self, collector):
+        collector.add_new_book('Гарри Поттер')
+        assert 'Гарри Поттер' in collector.books_genre
+        assert collector.books_genre['Гарри Поттер'] == ''
+
+    def test_set_book_genre(self, collector):
+        collector.add_new_book('1984')
+        collector.set_book_genre('1984', 'Фантастика')
+        assert collector.books_genre['1984'] == 'Фантастика'
+
 @pytest.fixture
 def collector_with_books():
     collector = BooksCollector()
@@ -23,6 +34,29 @@ def collector_with_favorites():
     collector.add_book_in_favorites('Избранная 1')
     collector.add_book_in_favorites('Избранная 2')
     return collector
+
+class TestBookCollector:
+    @pytest.fixture
+    def test_add_book_to_favorite(self, book):
+       pass
+
+@pytest.fixture
+def test_add_book_to_favorite_len(self, book_with_favorite):
+    pass
+
+def test_get_books_genre_many_books(collector):
+    collector.add_new_book('Заживо в темноте')
+    collector.set_book_genre('Заживо в темноте', 'Ужасы')
+    collector.add_new_book('Золотой теленок')
+    collector.set_book_genre('Золотой теленок', 'Комедии')
+    collector.add_new_book('Восточный экспресс')
+    collector.set_book_genre('Восточный экспресс', 'Детективы')
+    expected = {
+        'Заживо в темноте': 'Ужасы',
+        'Золотой теленок': 'Комедии',
+        'Восточный экспресс': 'Детективы'
+    }
+    assert collector.get_books_genre() == expected
 
 class TestAddNewBook:
     def test_add_single_book(self, collector):
